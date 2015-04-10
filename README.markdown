@@ -1,3 +1,5 @@
+##### This module forked and modified from stevenmerrill/graphiteapi
+
 #### puppet-graphiteapi
 
 _(Also includes carbon.)_
