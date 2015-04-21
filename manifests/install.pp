@@ -3,22 +3,19 @@
 class graphiteapi::install {
   include graphiteapi::params
 
-  # EPEL is needed for the packages.
-  Package {
-    require => Class['epel'],
-  }
-
-  # @TODO: Decouple this a bit if possible.
-  if (!defined(Class['python'])) {
-    class { 'python':
-      dev        => true,
-      pip        => true,
-      virtualenv => true,
-    }
-  }
-
   # Install some Graphite API dependencies.
-  package { ['cairo-devel', 'libffi-devel', 'libyaml-devel', 'libtool']: } ->
+  package { [
+    'cairo',
+    'cairo-devel',
+    'libffi',
+    'libffi-devel',
+    'libyaml',
+    'libyaml-devel',
+    'libtool',
+    'bitmap-fonts-compat',
+    ]:
+    ensure => installed,
+  } ->
 
   # Install graphite-api in a virtualenv.
   python::virtualenv { $graphiteapi::virtualenv_path:
@@ -28,15 +25,16 @@ class graphiteapi::install {
   python::pip { 'graphite-api':
     virtualenv => $graphiteapi::virtualenv_path,
   } ->
-  python::pip { 'gunicorn':
+  python::pip {'uWSGI':
+    pkgname    => 'uWSGI==2.0.6',
     virtualenv => $graphiteapi::virtualenv_path,
   }
 
-  if $create_search_index == true {
-    file { $graphiteapi_search_index:
+  if $graphiteapi::create_search_index == true {
+    file { $graphiteapi::graphiteapi_search_index:
       ensure => present,
-      owner => $graphiteapi_user,
-      group => $graphiteapi_group,
+      owner  => $graphiteapi::graphiteapi_user,
+      group  => $graphiteapi::graphiteapi_group,
     }
   }
 }

@@ -27,4 +27,11 @@ class graphiteapi (
   class { 'graphiteapi::config': } ~>
   class { 'graphiteapi::service': } ->
   Class['graphiteapi']
+
+  firewall {'100 allow graphite-api HTTP access':
+    dport  => 8000,
+    state  => 'NEW',
+    proto  => tcp,
+    action => accept,
+  }
 }

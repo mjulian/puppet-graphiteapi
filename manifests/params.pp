@@ -9,13 +9,13 @@ class graphiteapi::params (
 ) {
   case $::osfamily {
     'RedHat', 'Amazon': {
-      $graphiteapi_user  = 'nobody'
-      $graphiteapi_group = 'nobody'
+      $graphiteapi_user  = 'graphite'
+      $graphiteapi_group = 'graphite'
       $virtualenv_path = '/opt/graphite-api'
-      $whisper_paths = ['/var/lib/carbon/whisper']
+      $whisper_paths = ['/opt/graphite/storage/whisper']
       $graphiteapi_tz = 'America/New_York'
       $graphiteapi_search_index = '/srv/graphiteapi_index'
-      $graphiteapi_log_path = '/var/log/gunicorn-graphite-api.log'
+      $graphiteapi_log_path = '/var/log/supervisor/graphite-api.log'
       $create_search_index = true
     }
     default: {
